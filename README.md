@@ -36,4 +36,4 @@ Follow these steps carefully to get the application running.
 First, clone the repository to your local machine using Git. **Do not download the ZIP file**, as this will not include the necessary Git history for updates.
 
 ```bash
-git clone https://github.com/AI-Citizen/fullstack-ai-chatbot-langchain-react.git
+git clone https://github.com/Karanmeta/ai_help_bot
