@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app 
+    env_file:
+      - .env
+    depends_on:
+      - neo4j
+    networks:
+      - bot-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+    networks:
+      - bot-network
+
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j-db
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD} 
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
+
+volumes:
+  neo4j_data:
