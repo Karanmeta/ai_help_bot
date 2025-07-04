@@ -1,48 +1,48 @@
-version: '3.8'
+# PASTE THIS INTO YOUR docker-compose.yml FILE
+
+version: "3.9"
 
 services:
+  # Backend API Service (Python/FastAPI)
   backend:
     build: ./backend
-    container_name: backend-service
+    container_name: backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/app:/app 
+      - ./backend:/app
     env_file:
       - .env
+    # THIS IS THE FIX: We tell uvicorn to look inside the 'app' subfolder for 'main'.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - neo4j
-    networks:
-      - bot-network
 
+  # Frontend Web App (React)
   frontend:
     build: ./frontend
-    container_name: frontend-service
+    container_name: frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
     depends_on:
       - backend
-    networks:
-      - bot-network
 
+  # Neo4j Database
   neo4j:
-    image: neo4j:5
-    container_name: neo4j-db
+    image: neo4j:5.16.0
+    container_name: neo4j
     ports:
       - "7474:7474"
       - "7687:7687"
-    environment:
-      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD} 
     volumes:
       - neo4j_data:/data
-    networks:
-      - bot-network
-
-networks:
-  bot-network:
-    driver: bridge
+    environment:
+      - NEO4J_AUTH=${NEO4J_USERNAME}/${NEO4J_PASSWORD}
 
 volumes:
   neo4j_data:

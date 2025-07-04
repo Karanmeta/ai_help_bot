@@ -1,12 +1,13 @@
+# PASTE THIS ENTIRE LIST INTO backend/requirements.txt
+
 fastapi
 uvicorn[standard]
 pydantic
+neo4j
 python-dotenv
+
+# LangChain Core and Community Packages
 langchain
+langchain-core
 langchain-community
 langchain-huggingface
-neo4j
-faiss-cpu
-sentence-transformers
-torch
-transformers
